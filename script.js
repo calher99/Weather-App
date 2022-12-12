@@ -15,7 +15,7 @@ initializeInput();
 async function getCoordinates(city) {
     try{
         const link = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=44e48fc145b6aa381c040fcc939ec2e5`
-        const response = await fetch (link);
+        const response = await fetch (link , { mode: 'cors' });
         const data = await response.json();
         const latitude = data[0].lat;
         const longitude = data[0].lon;
@@ -28,7 +28,7 @@ async function getCoordinates(city) {
 async function getWeather (lat, lon){
     try{
         const link = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=44e48fc145b6aa381c040fcc939ec2e5`
-        const response = await fetch (link);
+        const response = await fetch (link ,{ mode: 'cors' });
         const data = await response.json();
         processWeather(await data);
     }catch (error){
@@ -86,7 +86,7 @@ function renderSelected(data) {
     const weather_desc = document.querySelector('#weather_description');
     const temperature = document.querySelector('#temperature');
     weather_desc.textContent= data.sky_description;
-    temperature.textContent = data.temp;
+    temperature.textContent = data.temp + '°C';
 
 }
 
