@@ -5,9 +5,23 @@ body {
     margin: 0;
     padding: 10px;
     justify-content: center;
+    font-family: 'Ruda', sans-serif;
 }
+
+.header {
+    text-align: center;
+    height: 10%;
+    padding: 10px
+}
+
+
+
 
 img {
     width: 500px;
     max-height: 600px;
+}
+
+.info {
+    display: flex;
 }
