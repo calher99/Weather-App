@@ -1,5 +1,13 @@
 body {
     display: grid;
     grid-template-rows: auto 1fr auto;
-    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    padding: 10px;
+    justify-content: center;
+}
+
+img {
+    width: 500px;
+    max-height: 600px;
 }
