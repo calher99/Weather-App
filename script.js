@@ -1,3 +1,14 @@
+function initializeInput () {
+    const form = document.querySelector('form');
+    const input = document.querySelector('input');
+
+    form.addEventListener('submit', (e) =>{
+        e.preventDefault();
+        getCoordinates(input.value);
+    });
+}
+
+
 
 async function getCoordinates(city) {
     try{
@@ -34,48 +45,55 @@ function processWeather (data){
 
     //---Extract weather
     //takes 1 position of the array and returns an object with the key parameters to print
-    extractWeather (data.list[0])
-    //Printweather
+    const today = extractWeather (data.list[0]);
+   
     //Gets the object and renders it in the screen
-    const sky = data.list[0].weather[0].main;
-    const sky_description = data.list[0].weather[0].description;
-    const temp=data.list[0].main.temp;
+    renderSelected(today);
+    
 }
 
-getCoordinates('barcelona')
+
 
 function extractWeather(obj) {
-    
+    // console.log(obj)
+    const temp = Math.round((obj.main.temp - 273.15) * 10) / 10;
+    const raw_date = obj.dt_txt;
+    const date_array = raw_date.split(' ');
+    const date = date_array[0];
+    const time = date_array[1];
+    return {
+        date,
+        time,
+        sky :obj.weather[0].main,
+        sky_description : obj.weather[0].description,
+        temp 
+    };
 }
 
+function renderSelected(data) {
 
-// NOT WORKING
-// async function getCityData(city) {
-//     try{
-//         const link = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=44e48fc145b6aa381c040fcc939ec2e5`
-//         const response = await fetch (link);
-//         const data = await response.json();
-//         return data;
+    // call gifty
+    fetchWeather(data.sky_description)
 
-//     }catch (error){
-//         console.log(error);
-//     }
-// }
-// function getCoordinates (city){
-//     let latitude = ''
-//     let longitude = ''
+    // display writteninfo
+    const weather_desc = document.querySelector('#weather_description');
+    const temperature = document.querySelector('#temperature');
+    weather_desc.textContent=data.sky_description;
+    temperature.textContent = data.temp;
+}
 
-//     getCityData(city)
-//         .then((obj)=>{
-//         latitude = obj[0].lat;
-//         longitude = obj[0].lon;
-//         console.log(latitude);
-//         }).catch((error) => {
-//             console.log(error);
-//         })
-//     return latitude;
-    
-// }
-
-// const coordinates = getCoordinates('madrid');
-// console.log(coordinates)
+function fetchWeather(word){
+    const link = `https://api.giphy.com/v1/gifs/translate?api_key=6CjiRKGYn3jII1YqFdWKkdameqWMdK6r&s=${word}`
+    const img = document.querySelector('img');
+    fetch(link, { mode: 'cors' })
+        .then(function (response) {
+            if (!response.ok) {
+                console.log('error with the API!')
+            }
+            return response.json();
+        })
+        .then(function (response) {
+            img.src = response.data.images.original.url;
+        })
+        .catch(error => console.log('error in the fetch!'))
+}
